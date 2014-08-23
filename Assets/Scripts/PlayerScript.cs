@@ -1,52 +1,47 @@
 ﻿using UnityEngine;
-using System;
+using System.Collections;
 
-public class PlayerScript : MonoBehaviour {
-
-	// The speed of the player
-	public Vector2 speed = new Vector2(50, 50);
-	
-	// Store the movement
-	private Vector2 movement;
-
-	private float jumpTime = 0;
+public class PlayerScript : MoveScript {
 
 	// Use this for initialization
 	void Start () {
+		base.Start();
 		Debug.Log ("Player initialisation");
 	}
 
 	void Update(){
-		// Retrieve axis information
-		float inputX = Input.GetAxis("Horizontal");
-		float inputY = Input.GetAxis("Vertical");
-
-		// Trying to re-use that input for now
-		bool shoot = Input.GetButtonDown("Fire1");
-		shoot |= Input.GetButtonDown("Fire2");
-
-		if (shoot) {
-			jumpTime = 1f;		
-		}
-
-		float jump = 0;
-		if (jumpTime > 0f) {
-			jump = 1;		
-		}
-		movement = new Vector2(
-			speed.x * inputX,
-			speed.y * jump);
-
+		UpdateMovement();
 	}
 
 
 	void FixedUpdate(){
-		// Move the game object
-		rigidbody2D.velocity = movement;
+		// inputstate is none unless one of the movement keys are pressed
+		currentInputState = inputState.None;
 
-		// Jumptime decrease
-		if (jumpTime > 0) {
-			jumpTime = jumpTime - 0.1f;		
+		// Axis information (pc = directional keys, xbox = left stick)
+		xAcceleration = Input.GetAxis("Horizontal");
+		//float inputY = Input.GetAxis("Vertical");
+
+		// move left
+		if(xAcceleration < 0) 
+		{ 
+			currentInputState = inputState.WalkLeft;
+			facingDir = facing.Left;
 		}
+		
+		// move right
+		if (xAcceleration > 0 && currentInputState != inputState.WalkLeft) 
+		{ 
+			currentInputState = inputState.WalkRight;
+			facingDir = facing.Right;
+		}
+		
+		// jump
+		if (Input.GetButtonDown("Jump")) 
+		{ 
+			currentInputState = inputState.Jump;
+		}
+
+		UpdatePhysics();
 	}
 }
