@@ -11,7 +11,6 @@ public class MoveScript : MonoBehaviour {
 		WalkLeft, 
 		WalkRight, 
 		Jump, 
-		Pass
 	}
 	[HideInInspector] public inputState currentInputState;
 	
@@ -25,14 +24,13 @@ public class MoveScript : MonoBehaviour {
 	protected Rigidbody2D _rigidbody;
 	
 	// Tune character movement	
-	public float runVel = 2.5f; 	
-	public float walkVel = 2f; 	
-	public float jumpVel = 7f; 	// jump velocity
-	public float jump2Vel = 3f; 	// double jump velocity
-	public float fallVel = 1f;		// fall velocity, (additional) gravity
+	protected float runVel = 6f; 	
+	protected float walkVel = 2f; 	
+	protected float jumpVel = 7f; 	// jump velocity
+	protected float jump2Vel = 3f; 	// double jump velocity
+	protected float fallVel = 2f;		// fall velocity, (additional) gravity
 
-	private float moveVel;
-	private float pVel = 0f;
+	protected float moveVel;
 
 	// Input defines part of the speed
 	protected float xAcceleration = 1f;
@@ -77,8 +75,7 @@ public class MoveScript : MonoBehaviour {
 		{
 			physVel.x = moveVel * xAcceleration;
 		}
-		Debug.Log (xAcceleration);
-		
+
 		// jump
 		if(currentInputState == inputState.Jump)
 		{
@@ -97,8 +94,8 @@ public class MoveScript : MonoBehaviour {
 		}
 
 		// use raycasts to determine if the player is standing on the ground or not
-		if (Physics2D.Raycast(new Vector2(_transform.position.x-0.26f,_transform.position.y-0.32f), -Vector2.up, .26f, groundMask) 
-		    || Physics2D.Raycast(new Vector2(_transform.position.x+0.26f,_transform.position.y-0.32f), -Vector2.up, .26f, groundMask))
+		if (Physics2D.Raycast(new Vector2(_transform.position.x-0.26f,_transform.position.y-0.36f), -Vector2.up, .26f, groundMask) 
+		    || Physics2D.Raycast(new Vector2(_transform.position.x+0.26f,_transform.position.y-0.36f), -Vector2.up, .26f, groundMask))
 		{
 			grounded = true;
 			jumps = 0;
@@ -107,6 +104,15 @@ public class MoveScript : MonoBehaviour {
 		{
 			grounded = false;
 			_rigidbody.AddForce(-Vector3.up * fallVel);
+		}
+		//wall jump
+		if (Physics2D.Raycast(new Vector2(_transform.position.x+0.36f,_transform.position.y-0.26f), Vector2.right, .26f, groundMask) 
+		    || Physics2D.Raycast(new Vector2(_transform.position.x+0.36f,_transform.position.y-0.26f), Vector2.right, .26f, groundMask)
+		    || Physics2D.Raycast(new Vector2(_transform.position.x-0.36f,_transform.position.y+0.26f), -Vector2.right, .26f, groundMask)
+		    || Physics2D.Raycast(new Vector2(_transform.position.x-0.36f,_transform.position.y+0.26f), -Vector2.right, .26f, groundMask))
+		{
+			Debug.Log ("WallJump");
+			jumps = 0;
 		}
 
 		// actually move the player

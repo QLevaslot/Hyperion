@@ -4,7 +4,7 @@ using System.Collections;
 public class PlayerScript : MoveScript {
 
 	// Use this for initialization
-	void Start () {
+	public override void Start () {
 		base.Start();
 		Debug.Log ("Player initialisation");
 	}
@@ -22,8 +22,10 @@ public class PlayerScript : MoveScript {
 		xAcceleration = Input.GetAxis("Horizontal");
 		//float inputY = Input.GetAxis("Vertical");
 
+		float run = Input.GetAxis ("Run");
+
 		// move left
-		if(xAcceleration < 0) 
+		if(xAcceleration < 0f) 
 		{ 
 			currentInputState = inputState.WalkLeft;
 			facingDir = facing.Left;
@@ -35,7 +37,13 @@ public class PlayerScript : MoveScript {
 			currentInputState = inputState.WalkRight;
 			facingDir = facing.Right;
 		}
-		
+		if (run != 0f) {
+			moveVel = runVel;
+		} else {
+			moveVel = walkVel;
+		}
+
+
 		// jump
 		if (Input.GetButtonDown("Jump")) 
 		{ 
