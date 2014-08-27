@@ -12,7 +12,10 @@ public class MoveScript : MonoBehaviour {
 		WalkRight, 
 		Jump, 
 	}
-	[HideInInspector] public inputState currentInputState;
+	protected inputState xCurrentInputState;
+	protected inputState yCurrentInputState;
+
+	public static SoundScript soundManager;
 	
 	[HideInInspector] public enum facing { Right, Left }
 	[HideInInspector] public facing facingDir;
@@ -56,14 +59,7 @@ public class MoveScript : MonoBehaviour {
 	{
 		moveVel = walkVel;
 	}
-	
-	// Update is called once per frame
-	public virtual void UpdateMovement() 
-	{
-		// what happens when i do something wrong?
 
-	}
-	
 	// Fixed update from PlayerScript
 	public virtual void UpdatePhysics()
 	{
@@ -71,16 +67,17 @@ public class MoveScript : MonoBehaviour {
 		physVel = Vector2.zero;
 		
 		// move left
-		if(currentInputState == inputState.WalkLeft || currentInputState == inputState.WalkRight)
+		if(xCurrentInputState == inputState.WalkLeft || xCurrentInputState == inputState.WalkRight)
 		{
 			physVel.x = moveVel * xAcceleration;
 		}
 
 		// jump
-		if(currentInputState == inputState.Jump)
+		if(yCurrentInputState == inputState.Jump)
 		{
 			if(jumps < maxJumps)
 			{
+				GlobalHandlers.soundManager.PlayJump();
 				jumps += 1;
 				if(jumps == 1)
 				{
@@ -106,17 +103,20 @@ public class MoveScript : MonoBehaviour {
 			_rigidbody.AddForce(-Vector3.up * fallVel);
 		}
 		//wall jump
-		if (Physics2D.Raycast(new Vector2(_transform.position.x+0.36f,_transform.position.y-0.26f), Vector2.right, .26f, groundMask) 
-		    || Physics2D.Raycast(new Vector2(_transform.position.x+0.36f,_transform.position.y-0.26f), Vector2.right, .26f, groundMask)
-		    || Physics2D.Raycast(new Vector2(_transform.position.x-0.36f,_transform.position.y+0.26f), -Vector2.right, .26f, groundMask)
-		    || Physics2D.Raycast(new Vector2(_transform.position.x-0.36f,_transform.position.y+0.26f), -Vector2.right, .26f, groundMask))
+		if (Physics2D.Raycast(new Vector2(_transform.position.x+0.32f,_transform.position.y-0.26f), Vector2.right, .03f, groundMask) 
+		    || Physics2D.Raycast(new Vector2(_transform.position.x+0.32f,_transform.position.y-0.26f), Vector2.right, .03f, groundMask)
+		    || Physics2D.Raycast(new Vector2(_transform.position.x-0.32f,_transform.position.y+0.26f), -Vector2.right, .03f, groundMask)
+		    || Physics2D.Raycast(new Vector2(_transform.position.x-0.32f,_transform.position.y+0.26f), -Vector2.right, .03f, groundMask))
 		{
-			Debug.Log ("WallJump");
 			jumps = 0;
 		}
 
 		// actually move the player
 		_rigidbody.velocity = new Vector2(physVel.x, _rigidbody.velocity.y);
+
+		// inputstate is reset here
+		xCurrentInputState = inputState.None;
+		yCurrentInputState = inputState.None;
 	}
 
 }
