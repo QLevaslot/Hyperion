@@ -13,7 +13,8 @@ public class SoundScript : MonoBehaviour {
 		audioSource.PlayOneShot(jump, 1f);
 	}
 
-	public void PlayDouble() 
+	// Just a test for now
+	public void PlayDoubleJump() 
 	{
 		audioSource.PlayOneShot(doubleJump, 1f);
 	}
