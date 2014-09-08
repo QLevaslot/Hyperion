@@ -45,7 +45,7 @@ public class CharacterScript : MonoBehaviour {
 	protected float walkVel = 5f; 	
 	protected float jumpVel = 10f; 	// jump velocity
 	protected float jump2Vel = 5f; 	// double jump velocity
-	protected float fallVel = 2f;	// fall velocity, (additional) gravity
+	protected float fallVel = 4f;	// fall velocity, (additional) gravity
 
 	protected float moveVel;
 

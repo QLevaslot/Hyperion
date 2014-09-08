@@ -11,7 +11,7 @@ public class PlayerInputScript : CharacterScript {
 	}
 
 	// Get input ASAP
-	void Update(){
+	void Update () {
 		// Axis information (pc = directional keys, xbox = left stick)
 		xAcceleration = Input.GetAxis("Horizontal");
 		
@@ -19,14 +19,18 @@ public class PlayerInputScript : CharacterScript {
 		if(xAcceleration < 0f) 
 		{ 
 			xCurrentInputState = inputState.Walk;
-			currentCharacterDirection = characterDirection.Left;
+			if(currentCharacterState != CharacterScript.characterState.SlideWall){
+				currentCharacterDirection = characterDirection.Left;
+			}
 		}
 
 		// move right
 		if (xAcceleration > 0 && xCurrentInputState != inputState.Walk) 
 		{ 
 			xCurrentInputState = inputState.Walk;
-			currentCharacterDirection = characterDirection.Right;
+			if(currentCharacterState != CharacterScript.characterState.SlideWall){
+				currentCharacterDirection = characterDirection.Right;
+			}
 		}
 
 		// run

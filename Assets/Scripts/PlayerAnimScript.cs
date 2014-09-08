@@ -34,6 +34,8 @@ public class PlayerAnimScript : MonoBehaviour {
 	}
 
 	void Update() {
+		// Ugh, sorry, code is a bit of a mess here 
+		// TODO add more anim states
 		if(character.currentCharacterState == CharacterScript.characterState.Idle && currentAnim != anim.Idle) {
 			// Idle 
 			currentAnim = anim.Idle;
@@ -49,12 +51,12 @@ public class PlayerAnimScript : MonoBehaviour {
 			currentAnim = anim.WalkRight;
 			_animator.SetInteger(_p1AnimState, 1);
 			_transform.localScale = new Vector3(-characterScale.x, characterScale.y);	
-		} else if (character.currentCharacterState == CharacterScript.characterState.Walk && character.currentCharacterDirection == CharacterScript.characterDirection.Left && currentAnim != anim.RunLeft) {
+		} else if (character.currentCharacterState == CharacterScript.characterState.Run && character.currentCharacterDirection == CharacterScript.characterDirection.Left && currentAnim != anim.RunLeft) {
 			// Run Left
 			currentAnim = anim.RunLeft;
 			_animator.SetInteger(_p1AnimState, 1);
 			_transform.localScale = new Vector3(characterScale.x, characterScale.y);	
-		}  else if (character.currentCharacterState == CharacterScript.characterState.Walk && character.currentCharacterDirection == CharacterScript.characterDirection.Right && currentAnim != anim.RunRight) {
+		}  else if (character.currentCharacterState == CharacterScript.characterState.Run && character.currentCharacterDirection == CharacterScript.characterDirection.Right && currentAnim != anim.RunRight) {
 			// Run Right
 			currentAnim = anim.RunRight;
 			_animator.SetInteger(_p1AnimState, 1);
@@ -73,7 +75,7 @@ public class PlayerAnimScript : MonoBehaviour {
 			// Slide Right Wall
 			currentAnim = anim.SlideWall;
 			_animator.SetInteger(_p1AnimState, 1);
-			_transform.localScale = new Vector3(characterScale.x, characterScale.y);	
+			_transform.localScale = new Vector3(characterScale.x, characterScale.y);
 		}  else if (character.currentCharacterState == CharacterScript.characterState.SlideWall && character.currentCharacterDirection == CharacterScript.characterDirection.Right  && currentAnim != anim.SlideWall) {
 			// Slide Left Wall
 			currentAnim = anim.SlideWall;
